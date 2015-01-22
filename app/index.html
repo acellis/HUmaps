@@ -19,13 +19,28 @@
   <!-- endbuild-->
 </head>
 
-<body unresolved>
-
-  <div class="hero-unit">
-    <yo-greeting></yo-greeting>
-    <p>You now have</p>
-    <yo-list></yo-list>
+<body unresolved fullbleed>
+<style>
+google-map {
+  padding-top:16px;
+  display: block;
+  height: 600px;
+}
+paper-button{
+  margin-top : 16 px;
+  margin-bottom : 16 px;
+}
+</style>
+  <div id="name">
+    <paper-button raised>PARKING LOTS</paper-button>
+    <paper-button raised>BLUE LIGHTS</paper-button>
+    <paper-button raised>MAJOR BUILDINGS</paper-button>
   </div>
+  <google-map
+  latitude="38.922684" longitude="-77.019438"
+  zoom="16">
+  </google-map>
+
 
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
