@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild-->
 
-  <script src="bower_components/platform/platform.js"></script>
+  <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
   <!-- build:vulcanized elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html">
   <!-- endbuild-->
@@ -30,8 +30,37 @@ paper-button{
   margin-top : 16 px;
   margin-bottom : 16 px;
 }
+
 </style>
-  <div id="name">
+<polymer-element name="api-ajax" attributes="bldgs">
+  <template>
+    <core-ajax
+      auto
+      handleAs = "json"
+      url = "api/bldg.json"
+      on-core-response = "{{handleResponse}}">
+    </core-ajax>
+  </template>
+  <script>
+  (function () {
+    'use strict';
+
+    Polymer({
+      handleResponse : function (e) {
+        console.log("api-ajax-response");
+        console.log(e.detail.response);
+        this.bldgs = e.detail.response;
+      },
+      ready : function () {
+
+      }
+    });
+
+  })();
+  </script>
+</polymer-element><api-ajax></api-ajax>
+  <api-ajax bldgs = "{{bldgs}}"></api-ajax>
+  <div id="name" flex>
     <paper-button raised>ALL</paper-button>
     <paper-button raised>STUDENT PARKING</paper-button>
     <paper-button raised>TEACHER PARKING</paper-button>
