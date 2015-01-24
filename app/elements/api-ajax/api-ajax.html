@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="api-ajax" attributes="bldgs">
+  <template>
+    <core-ajax
+    auto
+    handleAs = "json"
+    url = "../../api/bldg.json"
+    on-core-response = "{{handleResponse}}"
+    response = "{{bldgs}}">
+  </core-ajax>
+</template>
+<script>
+(function () {
+  'use strict';
+
+  Polymer({
+    handleResponse : function (e) {
+      this.fire('api-ajax-response',{bldgs:this.bldgs});
+      // console.log("api-ajax-response");
+      console.log(this.bldgs[0].campus_name)
+      for ( var o in this.bldgs){
+        // console.log(this.bldgs[o])
+      }
+    },
+    ready : function () {
+    }
+  });
+
+})();
+</script>
+</polymer-element>
