@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/google-map/google-map.html">
 <link rel="import" href="../api-ajax/api-ajax.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <polymer-element name="hu-map" attributes="">
   <template>
@@ -13,17 +14,30 @@
         display: block;
         height: 600px;
       }
+      paper-button{
+        margin-top:8px;
+        margin-bottom:8px;
+      }
     </style>
+    <paper-button on-tap="{{clickHandler}}" raised>MAIN CAMPUS</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>EAST CAMPUS</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>WEST CAMPUS</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>PARKING</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>RESIDENCE HALLS</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>DINING</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>BLUE LIGHTS</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>BISON ONE CARD</paper-button>
     <api-ajax bldgs = "{{bldgs}}"></api-ajax>
     <google-map
       id="humap"
+      apiKey="{{apiKey}}"
       map="{{map}}"
+      styles="{{mapStyle}}"
       latitude="38.922684" longitude="-77.019438"
       zoom="16"
       maxzoom="16"
       minZoom="16"
-      disableDefaultUI>
-
+      disableDefaultUI>f
         <template repeat = "{{bldg in bldgs}}">
           <google-map-marker
             latitude="{{bldg.lat}}"
@@ -43,12 +57,30 @@
       'use strict';
 
       Polymer({
+
         ready:function(){
           this.apiKey = "AIzaSyAQ8fwfkyjhln59a2ODNDNF2f6lXZhA_aU";
-          // this.bldgs = this.bldgs || [];
+          this.mapStyle = [
+            {"elementType":"labels.icon","stylers":[{"color":"#365779"},{"visibility":"off"}]}
+            ,{"featureType":"landscape","stylers":[{"color":"#042E58"}]}
+            ,{"featureType":"road.highway","stylers":[{"color":"#A51A1D"}]}
+            ,{"featureType":"road.local","stylers":[{"color":"#808080"},{"visibility":"off"}]}
+            ,{"featureType":"road.arterial","stylers":[{"color":"#808080"},{"visibility":"off"}]}
+            ,{"elementType":"labels.text","stylers":[{"color":"#ffffff"},{"weight":0.1}]}
+            ,{"featureType":"poi","stylers":[{"color":"#365779"}]}
+            ,{"featureType":"poi","elementType":"labels.text","stylers":[{"color":"#ffffff"}]}
+            ,{"featureType":"water"}
+            ,{"featureType":"transit","stylers":[{"color":"#365779"}]}];
+        },
+        domReady:function(){
+        },
+        mapReady:function(){
+          console.log("map ready");
+          // console.log(this.$.humap.map);
+          console.log(google.maps)
         },
         bldgsChanged:function(attrName,oldVal,newVal){
-          console.log(this.bldgs)
+          console.log("bldgs attr changed");
         }
       });
 

@@ -160,7 +160,6 @@ div#feature_list{
   })(); </script>
   </polymer-element>
 
-  <humap-toolbar></humap-toolbar>
   <hu-map apidata="{{bldgs}}"></hu-map>
   <div id="feature_list">
     featurelist
@@ -170,18 +169,14 @@ div#feature_list{
   <script>
   (function(document) {
     'use strict';
-    document.addEventListener('google-map-ready',function(){
-      console.log("google map api ready")
-    });
     document.addEventListener('polymer-ready', function() {
       // Perform some behaviour
-      var humap = document.querySelector('google-map');
-      var marker = document.querySelector('google-map-marker');
-      var logic = document.querySelector('humap-logic');
-      document.addEventListener('api-ajax-response',function(e){
-        console.log('fake bldgs api loaded')
-        // logic.makeMarkers(e.detail.bldgs);
+      var humap = document.querySelector('hu-map');
+      humap.addEventListener('google-map-ready',function(e){
+        console.log("google map ready")
+        humap.mapReady();
       });
+      
 
     });
 
