@@ -160,9 +160,8 @@ div#feature_list{
   })(); </script>
   </polymer-element>
 
-  <api-ajax bldgs = "{{bldgs}}"></api-ajax>
   <humap-toolbar></humap-toolbar>
-  <hu-map bldgs="{{bldgs}}"></hu-map>
+  <hu-map apidata="{{bldgs}}"></hu-map>
   <div id="feature_list">
     featurelist
   </div>
@@ -184,7 +183,6 @@ div#feature_list{
         // logic.makeMarkers(e.detail.bldgs);
       });
 
-      console.log($(humap))
     });
 
 

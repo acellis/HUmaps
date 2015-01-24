@@ -1,7 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/google-map/google-map.html">
+<link rel="import" href="../api-ajax/api-ajax.html">
 
-<polymer-element name="hu-map" attributes="bldgs">
+<polymer-element name="hu-map" attributes="">
   <template>
     <style>
       :host {
@@ -13,15 +14,28 @@
         height: 600px;
       }
     </style>
+    <api-ajax bldgs = "{{bldgs}}"></api-ajax>
     <google-map
       id="humap"
       map="{{map}}"
-      bldgs="{{bldgs}}"
       latitude="38.922684" longitude="-77.019438"
       zoom="16"
       maxzoom="16"
       minZoom="16"
-      disableDefaultUI></google-map>
+      disableDefaultUI>
+
+        <template repeat = "{{bldg in bldgs}}">
+          <google-map-marker
+            latitude="{{bldg.lat}}"
+            longitude="{{bldg.lon}}">
+            <h3>{{bldg.campus_name}}({{bldg.campus_id}})</h3>
+            <h3>{{bldg.building_name}}({{bldg.building_id}})</h3>
+            <p>
+              {{bldg.building_address}}
+            </p>
+          </google-map-marker>
+        </template>
+      </google-map>
 
   </template>
   <script>
@@ -29,7 +43,13 @@
       'use strict';
 
       Polymer({
-        // define element prototype here
+        ready:function(){
+          this.apiKey = "AIzaSyAQ8fwfkyjhln59a2ODNDNF2f6lXZhA_aU";
+          // this.bldgs = this.bldgs || [];
+        },
+        bldgsChanged:function(attrName,oldVal,newVal){
+          console.log(this.bldgs)
+        }
       });
 
     })();

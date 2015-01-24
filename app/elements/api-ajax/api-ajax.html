@@ -8,7 +8,6 @@
     handleAs = "json"
     url = "../../api/bldg.json"
     on-core-response = "{{handleResponse}}"
-    response = "{{bldgs}}">
   </core-ajax>
 </template>
 <script>
@@ -16,15 +15,13 @@
   'use strict';
 
   Polymer({
-    handleResponse : function (e) {
-      this.fire('api-ajax-response',{bldgs:this.bldgs});
-      // console.log("api-ajax-response");
-      console.log(this.bldgs[0].campus_name)
-      for ( var o in this.bldgs){
-        // console.log(this.bldgs[o])
-      }
+    ready:function(){
+      this.json = this.json || [];
     },
-    ready : function () {
+    handleResponse : function (e) {
+      this.bldgs = e.detail.response;
+
+
     }
   });
 
