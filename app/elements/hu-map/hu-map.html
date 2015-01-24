@@ -2,7 +2,25 @@
 <link rel="import" href="../../bower_components/google-map/google-map.html">
 <link rel="import" href="../api-ajax/api-ajax.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/google-map-markerclusterer/google-map-markerclusterer.html">
 
+<polymer-element name="main-campus" extends="google-map-marker"attributes="">
+  <template>
+  <style>
+  :host {
+    display: block;
+  }
+  </style>
+</template>
+<script>
+(function () {
+  'use strict';
+
+  Polymer();
+
+})();
+</script>
+</polymer-element>
 <polymer-element name="hu-map" attributes="">
   <template>
     <style>
@@ -42,6 +60,8 @@
           <google-map-marker
             latitude="{{bldg.lat}}"
             longitude="{{bldg.lon}}">
+            <google-map-markerclusterer map="{{map}}"></google-map-markerclusterer>
+
             <h3>{{bldg.campus_name}}({{bldg.campus_id}})</h3>
             <h3>{{bldg.building_name}}({{bldg.building_id}})</h3>
             <p>
@@ -84,7 +104,7 @@
           switch (e.target.innerText) {
             case "MAIN CAMPUS":
               console.log("MAIN CAMPUS button clicked");
-                
+
               break;
               case "EAST CAMPUS":
                 console.log("EAST CAMPUS button clicked");
