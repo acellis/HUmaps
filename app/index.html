@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,7 +11,8 @@
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild-->
-
+  <script src="bower_components/underscore/underscore.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
   <!-- build:vulcanized elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html">
@@ -26,11 +26,16 @@ google-map {
   display: block;
   height: 600px;
 }
-paper-button{
-  margin-top : 16 px;
-  margin-bottom : 16 px;
+div#feature_list{
+  color:white;
+  background-color:rgba(0,0,0,.5);
+  height:80%;
+  width:30%;
+  position:absolute;
+  top:15%;
+  right:16px;
+  z-index:10;
 }
-
 </style>
 <polymer-element name="api-ajax" attributes="bldgs">
   <template>
@@ -38,7 +43,8 @@ paper-button{
       auto
       handleAs = "json"
       url = "api/bldg.json"
-      on-core-response = "{{handleResponse}}">
+      on-core-response = "{{handleResponse}}"
+      response = "{{bldgs}}">
     </core-ajax>
   </template>
   <script>
@@ -47,34 +53,131 @@ paper-button{
 
     Polymer({
       handleResponse : function (e) {
-        console.log("api-ajax-response");
-        console.log(e.detail.response);
-        this.bldgs = e.detail.response;
+        this.fire('api-ajax-response',{bldgs:this.bldgs});
+        // console.log("api-ajax-response");
+        console.log(this.bldgs[0].campus_name)
+        for ( var o in this.bldgs){
+          // console.log(this.bldgs[o])
+        }
       },
       ready : function () {
-
       }
     });
 
   })();
   </script>
-</polymer-element><api-ajax></api-ajax>
+</polymer-element>
+<polymer-element name="humap-logic" attributes="bldgs">
+  <template></template>
+  <script> (function () { 'use strict';
+    Polymer({
+      ready : function () {
+        this.map = $( 'google-map' );
+        this.marker = $( 'google-map-marker' );
+        this.features = {};
+        this.features.bldgs=[];
+        this.mapStyle = [{"elementType":"labels.icon","stylers":[{"color":"#365779"},{"visibility":"off"}]},{"featureType":"landscape","stylers":[{"color":"#042E58"}]},{"featureType":"road.highway","stylers":[{"color":"#A51A1D"}]}
+        ,{"featureType":"road.local","stylers":[{"color":"#808080"},{"visibility":"off"}]},{"featureType":"road.arterial","stylers":[{"color":"#808080"},{"visibility":"off"}]},{"elementType":"labels.text","stylers":[{"color":"#ffffff"}
+        ,{"weight":0.1}]}
+        ,{"featureType":"poi","stylers":[{"color":"#365779"}]},{"featureType":"poi","elementType":"labels.text","stylers":[{"color":"#ffffff"}]},{"featureType":"water"}
+        ,{"featureType":"transit","stylers":[{"color":"#365779"}]}];
+      },
+      makeMarkers:function(bldgs){
+        this.bldgs = bldgs; //save bldgs array
+        _.each(bldgs,function(bldg,index,bldgs){ //clone and add new markers
+          var newMarker = this.marker.clone();
+          newMarker[0].latitude = bldg.lat;
+          newMarker[0].longitude = bldg.lon;
+          newMarker[0].id = bldg.building_id;
+          newMarker.insertAfter(this.marker);
+          this.features.bldgs.push(newMarker);
+
+        },this);
+        this.setStyle();
+      },
+      setStyle: function(){
+        this.map[0].styles = this.mapStyle;
+      }
+    });
+  })(); </script>
+</polymer-element>
+<polymer-element name="humap-toolbar" >
+  <template>
+    <style>
+      :host{
+        display:block;
+      }
+    </style>
+    <paper-button on-tap="{{clickHandler}}" raised>ALL</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>STUDENT PARKING</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>TEACHER PARKING</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>BLUE LIGHTS</paper-button>
+    <paper-button on-tap="{{clickHandler}}" raised>MAJOR BUILDINGS</paper-button>
+  </template>
+  <script> (function () { 'use strict';
+  Polymer({
+    ready : function () {
+    },
+    clickHandler:function(e){
+      console.log("click");
+      switch (e.target.innerText) {
+        case "ALL":
+          console.log("ALL button clicked");      
+          break;
+        case "STUDENT PARKING":
+          console.log("STUDENT PARKING button clicked");
+          break;
+        case "TEACHER PARKING":
+          console.log("TEACHER PARKING button clicked");
+          break;
+        case "BLUE LIGHTS":
+          console.log("BLUE LIGHTS button clicked");
+          break;
+        case "MAJOR BUILDINGS":
+          console.log("MAJOR BUILDINGS button clicked");
+          break;
+        default:
+          console.log("Sorry");
+        }
+    }
+  });
+})(); </script>
+</polymer-element>
   <api-ajax bldgs = "{{bldgs}}"></api-ajax>
-  <div id="name" flex>
-    <paper-button raised>ALL</paper-button>
-    <paper-button raised>STUDENT PARKING</paper-button>
-    <paper-button raised>TEACHER PARKING</paper-button>
-    <paper-button raised>BLUE LIGHTS</paper-button>
-    <paper-button raised>MAJOR BUILDINGS</paper-button>
-  </div>
+  <humap-logic bldgs = "{{bldgs}}"></humap-logic>
+  <humap-toolbar></humap-toolbar>
+
   <google-map
-  latitude="38.922684" longitude="-77.019438"
-  zoom="16">
+    id="humap"
+    latitude="38.922684" longitude="-77.019438"
+    zoom="16">
+    <google-map-marker
+      latitude="38.922684" longitude="-77.019438">
+    </google-map-marker>
   </google-map>
-
-
+  <div id="feature_list">
+    featurelist
+  </div>
   <!-- build:js scripts/app.js -->
-  <script src="scripts/app.js"></script>
+  <!-- <script src="scripts/app.js"> -->
+  <script>
+  (function(document) {
+    'use strict';
+    document.addEventListener('polymer-ready', function() {
+      // Perform some behaviour
+      var humap = document.querySelector('google-map');
+      var marker = document.querySelector('google-map-marker');
+      var logic = document.querySelector('humap-logic');
+      document.addEventListener('api-ajax-response',function(e){
+        console.log('fake bldgs api loaded')
+        logic.makeMarkers(e.detail.bldgs);
+      });
+    });
+    // wrap document so it plays nice with other libraries
+    // http://www.polymer-project.org/platform/shadow-dom.html#wrappers
+  })(wrap(document));
+
+  </script>
   <!-- endbuild-->
 </body>
 
