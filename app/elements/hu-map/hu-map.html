@@ -79,6 +79,38 @@
           // console.log(this.$.humap.map);
           console.log(google.maps)
         },
+        clickHandler:function(e){
+          console.log("click");
+          switch (e.target.innerText) {
+            case "MAIN CAMPUS":
+              console.log("MAIN CAMPUS button clicked");
+                
+              break;
+              case "EAST CAMPUS":
+                console.log("EAST CAMPUS button clicked");
+                break;
+                case "WEST CAMPUS":
+                  console.log("WEST CAMPUS button clicked");
+                  break;
+                  case "PARKING":
+                    console.log("PARKING button clicked");
+                    break;
+                    case "RESIDENCE HALLS":
+                      console.log("RESIDENCE HALLS button clicked");
+                      break;
+                      case "DINING":
+                        console.log("DINING button clicked");
+                        break;
+                        case "BLUE LIGHTS":
+                          console.log("BLUE LIGHTS button clicked");
+                          break;
+                          case "BISON ONE CARD":
+                            console.log("BISON ONE CARD button clicked");
+                            break;
+                            default:
+                              console.log("Sorry");
+                            }
+        },
         bldgsChanged:function(attrName,oldVal,newVal){
           console.log("bldgs attr changed");
         }
