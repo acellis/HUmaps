@@ -5,6 +5,7 @@
 <!-- <link rel="import" href="../../bower_components/google-map-markerclusterer/google-map-markerclusterer.html"> -->
 <link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../hu-list/hu-list.html">
 
 <polymer-element name="main-campus" extends="google-map-marker"attributes="">
   <template>
@@ -38,17 +39,7 @@
         margin-top:8px;
         margin-bottom:8px;
       }
-      div#feature_list{
-        color:white;
-        background-color:rgba(200,200,200,.8);
-        height:80%;
-        width:30%;
-        position:absolute;
-        top:15%;
-        right:16px;
-        z-index:10;
-        overflow:scroll;
-      }
+
       paper-toggle-button{
 
       }
@@ -59,7 +50,7 @@
 
 
     <core-selector id="selector" valueattr="index" selected="0">
-      <paper-button index="0" on-tap="{{clickHandler}}" raised>ALL</paper-button>
+      <paper-button index="0" on-tap="{{clickHandler}}" raised>ALL </paper-button>
       <paper-button index="1" on-tap="{{clickHandler}}" raised>MAIN CAMPUS</paper-button>
 
       <paper-button index="2" on-tap="{{clickHandler}}" raised>EAST CAMPUS</paper-button>
@@ -76,6 +67,19 @@
 
       <paper-button index="8" on-tap="{{clickHandler}}" raised>BISON ONE CARD</paper-button>
     </core-selector>
+    <!--
+    CONTAINAER FOR THE LIST COMPONENTS-->
+    <hu-list id="hu_list"
+      bldgs="{{bldgs}}"
+      show="{{filters}}">
+
+    </hu-list>
+
+
+
+
+
+
     <api-ajax bldgs = "{{bldgs}}"></api-ajax>
     <google-map
       id="humap"
@@ -86,12 +90,14 @@
       zoom="16"
       maxzoom="16"
       minZoom="16"
-      disableDefaultUI>f
-        <template repeat = "{{bldg in bldgs}}">
+      disableDefaultUI>
+
+        <!--THIS TEMPLATE REPEATS THE GOOGLE-MAP-MARKER COMPONENT
+            FOR EVERY MARKER OBJECT IN THE  JSON FILE   -->
+         <template repeat = "{{bldg in bldgs}}">
           <google-map-marker
             latitude="{{bldg.lat}}"
             longitude="{{bldg.lon}}">
-            <!-- <google-map-markerclusterer map="{{map}}"></google-map-markerclusterer> -->
 
             <h3>{{bldg.campus_name}}({{bldg.campus_id}})</h3>
             <h3>{{bldg.building_name}}({{bldg.building_id}})</h3>
@@ -101,19 +107,9 @@
           </google-map-marker>
         </template>
       </google-map>
-        <div id="feature_list">
 
-          <paper-shadow z= "2"></paper-shadow>
-          <template repeat="{{bldg in bldgs}}">
 
-            <a href="#"><h5>{{bldg.building_name}} ({{bldg.building_id}})</h5>
-            </a>
 
-          {{bldg.building_name}}
-          {{bldg.building_name}}
-        </template>
-
-        </div>
 
 
   </template>
@@ -122,8 +118,9 @@
       'use strict';
 
       Polymer({
+        // @TODO ADD FUNCTION TO FILTER THE LIST COMPONENTS BY WHAT IS CONTAINED INSIDE THEM
         toggleButton:function(){
-          
+
         },
         ready:function(){
 
@@ -149,9 +146,26 @@
           // console.log(this.$.humap.map);
 
         },
+        filterList:function(id){
+          this.$.hu_list.show = !this.$.hu_list.show;
+          this.$.hu_list.showid = id;
+          // this.$.hu_list.show = id;
+        },
+        /**
+         * THIS FUNCTION IS THE SOLE HANDLER FOR ALL 8 PAPER-BUTTONS
+         * @TODO  CALL A METHOD ON THE LIST COMPONENT THAT FILTERS ITSELF BY
+         *        BUILDING ID WHICH IS PASSED IN BY THIS
+         */
         clickHandler:function(e,detail,sender){
+          var filter = e.target.innerText
           console.log("click");
-          switch (e.target.innerText) {
+          _.each(this.bldgs,function(b, i , bs){
+            if(b.campus_name == "Main Campus"){
+              console.log(b)
+              this.filterList(b.campus_id);
+            }
+          },this)
+          switch (filter) {
             case "MAIN CAMPUS":
               console.log("MAIN CAMPUS button clicked");
               break;

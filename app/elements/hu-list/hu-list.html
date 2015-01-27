@@ -1,0 +1,45 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
+<polymer-element name="hu-list" attributes="bldgs show showid">
+  <template>
+    <style>
+      :host {
+        display:block;
+          color:white; 
+          background-color:rgba(200,200,200,.8);
+          height:80%;
+          width:30%;
+          position:absolute;
+          top:15%;
+          right:16px;
+          z-index:10;
+          overflow:scroll;
+      }
+    </style>
+
+    sup
+    <template repeat="{{bldg in bldgs}}">
+        <a id="bid"href="#{{bldg.building_id}}" >{{bldg.building_id}}</a>
+    </template>
+  </template>
+  <script>
+    (function () {
+      // @ TODO: on click I need to call a function to popup the marker
+      'use strict';
+
+      Polymer({
+        ready:function(){
+          this.show = false;
+        },
+        showChanged:function(){
+          console.log("filtering");
+          console.log(this.show)
+          console.log(this.showid)
+
+        }
+      });
+
+    })();
+  </script>
+</polymer-element>
