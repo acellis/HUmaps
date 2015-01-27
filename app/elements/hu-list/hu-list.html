@@ -10,9 +10,10 @@
       :host {
         display:block;
           color:black;
-          height:100%;
+          height:80%;
           position:absolute;
           right:16px;
+          top:68px;
           width:400px;
           z-index:10;
           overflow-y:scroll;
@@ -29,6 +30,10 @@
         <hu-card hidden?="{{b.image_url!=categoryselected && categoryselected!='all'}}">
           <h1>{{b.building_name}}</h1>
           <h2>({{b.building_id}})</h2>
+          <a href="#{{b.building_id}}">
+            {{b.building_address}}
+          </a>
+
         </hu-card>
 
       </template>

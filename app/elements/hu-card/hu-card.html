@@ -21,13 +21,13 @@
     margin-bottom: 10px;
   }
   polyfill-next-selector { content: '.card-header h2'; }
-  .card-header ::content h1 {
+  .card-header ::content h4 {
     margin: 0;
     font-size: .5 rem;
     font-weight: 300;
   }
   polyfill-next-selector { content: '.card-header img'; }
-  .card-header ::content h2 {
+  .card-header ::content h5 {
     margin: 0;
     font-size: .4 rem;
     font-weight: 100;
@@ -38,10 +38,11 @@
   <paper-button raised class="card-header" layout horizontal center>
     <content select="h1"></content>
     <content select="h2"></content>
+    <content select="a"></content>
   </paper-button>
   <content></content>
   </template>
-    <content select="a"></content>
+
   <script>
     (function () {
       'use strict';

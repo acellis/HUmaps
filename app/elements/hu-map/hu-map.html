@@ -24,7 +24,10 @@
       google-map {
         padding-top:16px;
         display: block;
-        height: 800px;
+        height: 600px;
+      }
+      google-map-marker{
+        background-color:red;
       }
       paper-button{
         margin-top:8px;
@@ -92,11 +95,16 @@
       core-field core-icon {
         vertical-align: middle;
       }
-      core-header-panel{
-        background-color:rgbs(120,120,120,.5);
+      [drawer] core-header-panel{
+        background-color:rgba(120,120,120,.5);
       }
+      
       core-drawer-panel{
         z-index:10;
+      }
+      div.content{
+        padding:0px 0px;
+        height:100%;
       }
     </style>
 
