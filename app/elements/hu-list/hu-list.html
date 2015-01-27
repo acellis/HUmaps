@@ -1,27 +1,39 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
-<polymer-element name="hu-list" attributes="bldgs show showid">
+<link rel="import" href="../../bower_components/core-list/core-list.html">
+<link rel="import" href="../hu-card/hu-card.html">
+
+<polymer-element name="hu-list" attributes="bldgs show showid" flex>
   <template>
     <style>
       :host {
         display:block;
-          color:white; 
-          background-color:rgba(200,200,200,.8);
+          color:black;
           height:80%;
-          width:30%;
           position:absolute;
-          top:15%;
           right:16px;
+          width:400px;
           z-index:10;
-          overflow:scroll;
+          overflow-y:scroll;
+          overflow: -moz-scrollbars-none;
+
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      a{
+        width:100%;
       }
     </style>
+    <core-list data = "{{bldgs}}" >
+      <template>
+        <content select="hu-card">
+          {{model.building_id}}
+        </content>
 
-    sup
-    <template repeat="{{bldg in bldgs}}">
-        <a id="bid"href="#{{bldg.building_id}}" >{{bldg.building_id}}</a>
-    </template>
+      </template>
+    </core-list>
   </template>
   <script>
     (function () {

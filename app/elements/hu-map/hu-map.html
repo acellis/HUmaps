@@ -6,24 +6,14 @@
 <link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../hu-list/hu-list.html">
+<link rel="import" href="../../bower_components/core-drawer-panel/core-drawer-panel.html">
+<link rel="import" href="../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/core-field/core-field.html">
+<link rel="import" href="../../bower_components/core-icons/core-icons.html">
 
-<polymer-element name="main-campus" extends="google-map-marker"attributes="">
-  <template>
-  <style>
-  :host {
-    display: block;
-  }
-  </style>
-</template>
-<script>
-(function () {
-  'use strict';
-
-  Polymer();
-
-})();
-</script>
-</polymer-element>
 <polymer-element name="hu-map" attributes="">
   <template>
     <style>
@@ -33,7 +23,7 @@
       google-map {
         padding-top:16px;
         display: block;
-        height: 600px;
+        height: 800px;
       }
       paper-button{
         margin-top:8px;
@@ -46,32 +36,114 @@
       .item.core-selected {
         background: #eee;
       }
+      core-selector{
+        height:800px;
+        position:absolute;
+        left:16px;
+        width:200px;
+        z-index:10;
+
+      }
+      [drawer] {
+        background-color: #fff;
+      }
+
+      [main] > div {
+        padding: 2em;
+      }
+
+      [drawer] > core-item {
+        padding: 1em;
+      }
+
+      [main] paper-checkbox {
+        margin-right: 1em;
+      }
+
+      [main] {
+        height: 100%;
+        background-color: #f1f1f3;
+      }
+
+      [drawer] core-toolbar {
+        background-color: #4F7DC9;
+        color: #fff;
+      }
+
+      [main] core-toolbar {
+        background-color: #526E9C;
+        color: #fff;
+      }
+      #inputs {
+        position: absolute;
+        bottom: 25px;
+        right: 25px;
+        z-index: 100;
+      }
+
+      core-field {
+        background: #fff;
+        border-radius: 3px;
+        margin-top: 5px;
+        width: 200px;
+      }
+
+      core-field core-icon {
+        vertical-align: middle;
+      }
     </style>
 
+    <core-drawer-panel ID="drawer_panel" responsiveWidth="900px">
 
-    <core-selector id="selector" valueattr="index" selected="0">
-      <paper-button index="0" on-tap="{{clickHandler}}" raised>ALL </paper-button>
-      <paper-button index="1" on-tap="{{clickHandler}}" raised>MAIN CAMPUS</paper-button>
+      <core-header-panel drawer>
+        <core-toolbar></core-toolbar>
+      </core-header-panel>
 
-      <paper-button index="2" on-tap="{{clickHandler}}" raised>EAST CAMPUS</paper-button>
+      <core-header-panel main>
+        <core-toolbar>
+          <paper-icon-button icon="menu"></paper-icon-button>
+          My notes
+          <paper-icon-button icon="search"></paper-icon-button>
+          <paper-icon-button icon="more-vert"></paper-icon-button>
+        </core-toolbar>
+      </core-header-panel>
 
-      <paper-button index="3" on-tap="{{clickHandler}}" raised>WEST CAMPUS</paper-button>
+    </core-drawer-panel>
 
-      <paper-button index="4" on-tap="{{clickHandler}}" raised>PARKING</paper-button>
+    <div id="inputs">
+      <core-field>
+        <core-icon icon="icons:search"></core-icon>
+        <input placeholder="Start address" value="San Francisco">
+      </core-field>
+      <core-field>
+        <core-icon icon="icons:search"></core-icon>
+        <input placeholder="End address" value="Mountain View">
+      </core-field>
+    </div>
+    <paper-button index="0" on-tap="{{clickHandler}}" raised>ALL </paper-button>
+    <paper-button index="1" on-tap="{{clickHandler}}" raised>MAIN CAMPUS</paper-button>
 
-      <paper-button index="5" on-tap="{{clickHandler}}" raised>RESIDENCE HALLS</paper-button>
+    <paper-button index="2" on-tap="{{clickHandler}}" raised>EAST CAMPUS</paper-button>
 
-      <paper-button index="6" on-tap="{{clickHandler}}" raised>DINING</paper-button>
+    <paper-button index="3" on-tap="{{clickHandler}}" raised>WEST CAMPUS</paper-button>
 
-      <paper-button index="7" on-tap="{{clickHandler}}" raised>BLUE LIGHTS</paper-button>
+    <paper-button index="4" on-tap="{{clickHandler}}" raised>PARKING</paper-button>
 
-      <paper-button index="8" on-tap="{{clickHandler}}" raised>BISON ONE CARD</paper-button>
-    </core-selector>
+    <paper-button index="5" on-tap="{{clickHandler}}" raised>RESIDENCE HALLS</paper-button>
+
+    <paper-button index="6" on-tap="{{clickHandler}}" raised>DINING</paper-button>
+
+    <paper-button index="7" on-tap="{{clickHandler}}" raised>BLUE LIGHTS</paper-button>
+
+    <paper-button index="8" on-tap="{{clickHandler}}" raised>BISON ONE CARD</paper-button>
     <!--
     CONTAINAER FOR THE LIST COMPONENTS-->
     <hu-list id="hu_list"
       bldgs="{{bldgs}}"
       show="{{filters}}">
+      <hu-card>
+        {{model.building_id}}
+      </hu-card>
 
     </hu-list>
 
@@ -81,19 +153,17 @@
 
 
     <api-ajax bldgs = "{{bldgs}}"></api-ajax>
-    <google-map
+    <!-- <google-map
       id="humap"
       apiKey="{{apiKey}}"
       map="{{map}}"
-      styles="{{mapStyle}}"
       latitude="38.922684" longitude="-77.019438"
       zoom="16"
       maxzoom="16"
       minZoom="16"
       disableDefaultUI>
 
-        <!--THIS TEMPLATE REPEATS THE GOOGLE-MAP-MARKER COMPONENT
-            FOR EVERY MARKER OBJECT IN THE  JSON FILE   -->
+
          <template repeat = "{{bldg in bldgs}}">
           <google-map-marker
             latitude="{{bldg.lat}}"
@@ -106,7 +176,7 @@
             </p>
           </google-map-marker>
         </template>
-      </google-map>
+      </google-map> -->
 
 
 
@@ -159,12 +229,7 @@
         clickHandler:function(e,detail,sender){
           var filter = e.target.innerText
           console.log("click");
-          _.each(this.bldgs,function(b, i , bs){
-            if(b.campus_name == "Main Campus"){
-              console.log(b)
-              this.filterList(b.campus_id);
-            }
-          },this)
+
           switch (filter) {
             case "MAIN CAMPUS":
               console.log("MAIN CAMPUS button clicked");

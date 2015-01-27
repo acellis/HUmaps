@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<polymer-element name="hu-button" attributes="">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-button on-tap=:{{buttonTapped}}></paper-button>
+  </template>
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        // define element prototype here
+        publish:{
+          selected:{
+            value:false,
+            reflect: true
+          }
+        },
+        buttonTapped:function(event, detail, sender){
+          this.selected = !this.selected;
+          this.fire('hu-button-tap');
+        }
+      });
+
+    })();
+  </script>
+</polymer-element>

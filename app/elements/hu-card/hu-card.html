@@ -1,0 +1,43 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
+
+<polymer-element name="hu-card" attributes="">
+  <template>
+  <style>
+  :host {
+    display: block;
+    position: relative;
+    padding: 20px;
+    width: 80%;
+    left:10%;
+    font-size: .6rem;
+    font-weight: 150;
+    margin-top:32px;
+    margin-bottom:32px;
+    background-color:rgbs(120,120,120,.5);
+  }
+  .card-header {
+    margin-bottom: 10px;
+  }
+  </style>
+  <paper-shadow z="2"></paper-shadow>
+  <div class="card-header" layout horizontal center>
+    <content select="h1"></content>
+    <content select="h2"></content>
+  </div>
+  <content></content>
+  </template>
+    <content select="a"></content>
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        // define element prototype here
+      });
+
+    })();
+  </script>
+</polymer-element>
