@@ -4,19 +4,18 @@
 <link rel="import" href="../../bower_components/core-list/core-list.html">
 <link rel="import" href="../hu-card/hu-card.html">
 
-<polymer-element name="hu-list" attributes="bldgs show showid" flex>
+<polymer-element name="hu-list" attributes="bldgs categoryselected" flex>
   <template>
     <style>
       :host {
         display:block;
           color:black;
-          height:80%;
+          height:100%;
           position:absolute;
           right:16px;
           width:400px;
           z-index:10;
           overflow-y:scroll;
-          overflow: -moz-scrollbars-none;
 
       }
       ::-webkit-scrollbar {
@@ -26,14 +25,13 @@
         width:100%;
       }
     </style>
-    <core-list data = "{{bldgs}}" >
-      <template>
-        <content select="hu-card">
-          {{model.building_id}}
-        </content>
+      <template repeat="{{b in bldgs}}">
+        <hu-card hidden?="{{b.image_url!=categoryselected && categoryselected!='all'}}">
+          <h1>{{b.building_name}}</h1>
+          <h2>({{b.building_id}})</h2>
+        </hu-card>
 
       </template>
-    </core-list>
   </template>
   <script>
     (function () {
@@ -42,13 +40,6 @@
 
       Polymer({
         ready:function(){
-          this.show = false;
-        },
-        showChanged:function(){
-          console.log("filtering");
-          console.log(this.show)
-          console.log(this.showid)
-
         }
       });
 

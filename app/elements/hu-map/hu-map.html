@@ -13,6 +13,7 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/core-field/core-field.html">
 <link rel="import" href="../../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
 <polymer-element name="hu-map" attributes="">
   <template>
@@ -91,21 +92,74 @@
       core-field core-icon {
         vertical-align: middle;
       }
+      core-header-panel{
+        background-color:rgbs(120,120,120,.5);
+      }
+      core-drawer-panel{
+        z-index:10;
+      }
     </style>
 
-    <core-drawer-panel ID="drawer_panel" responsiveWidth="900px">
+    <core-drawer-panel id="drawerpanel"
+      responsiveWidth="600px">
 
-      <core-header-panel drawer>
-        <core-toolbar></core-toolbar>
+      <core-header-panel drawer layout horizontal center>
+        <paper-button index="0" on-tap="{{clickHandler}}" raised>ALL </paper-button>
+        <paper-button index="1" on-tap="{{clickHandler}}" raised>MAIN CAMPUS</paper-button>
+
+        <paper-button index="2" on-tap="{{clickHandler}}" raised>EAST CAMPUS</paper-button>
+
+        <paper-button index="3" on-tap="{{clickHandler}}" raised>WEST CAMPUS</paper-button>
+
+        <paper-button index="4" on-tap="{{clickHandler}}" raised>PARKING</paper-button>
+
+        <paper-button index="5" on-tap="{{clickHandler}}" raised>RESIDENCE HALLS</paper-button>
+
+        <paper-button index="6" on-tap="{{clickHandler}}" raised>DINING</paper-button>
+
+        <paper-button index="7" on-tap="{{clickHandler}}" raised>BLUE LIGHTS</paper-button>
+
+        <paper-button index="8" on-tap="{{clickHandler}}" raised>BISON ONE CARD</paper-button>
       </core-header-panel>
 
       <core-header-panel main>
         <core-toolbar>
-          <paper-icon-button icon="menu"></paper-icon-button>
-          My notes
+          <paper-icon-button icon="menu"
+            on-click="{{toggleDrawer}}"></paper-icon-button>
+          <span flex>HU MAPS</span>
           <paper-icon-button icon="search"></paper-icon-button>
           <paper-icon-button icon="more-vert"></paper-icon-button>
         </core-toolbar>
+        <div class="content">
+          <google-map
+            id="humap"
+            apiKey="{{apiKey}}"
+            map="{{map}}"
+            latitude="38.922684" longitude="-77.019438"
+            zoom="16"
+            maxzoom="16"
+            minZoom="16"
+            disableDefaultUI>
+          <template repeat = "{{bldg in bldgs}}">
+              <google-map-marker id="{{bldg.image_url}}"
+              latitude="{{bldg.lat}}"
+              longitude="{{bldg.lon}}"
+              icon="../../images/icon/{{bldg.image_url || 'college'}}-24@2x.png"
+              title="{{bldg.building_name}}"
+              hidden?="{{bldg.image_url!=categorySelected && categorySelected!='all'}}">
+
+              <h3>{{bldg.campus_name}}({{bldg.campus_id}})</h3>
+              <h3>{{bldg.building_name}}({{bldg.building_id}})</h3>
+              <p>
+                {{bldg.building_address}}
+              </p>
+            </google-map-marker>
+          </template>
+      </google-map>
+
+
+
+        </div>
       </core-header-panel>
 
     </core-drawer-panel>
@@ -120,29 +174,15 @@
         <input placeholder="End address" value="Mountain View">
       </core-field>
     </div>
-    <paper-button index="0" on-tap="{{clickHandler}}" raised>ALL </paper-button>
-    <paper-button index="1" on-tap="{{clickHandler}}" raised>MAIN CAMPUS</paper-button>
 
-    <paper-button index="2" on-tap="{{clickHandler}}" raised>EAST CAMPUS</paper-button>
-
-    <paper-button index="3" on-tap="{{clickHandler}}" raised>WEST CAMPUS</paper-button>
-
-    <paper-button index="4" on-tap="{{clickHandler}}" raised>PARKING</paper-button>
-
-    <paper-button index="5" on-tap="{{clickHandler}}" raised>RESIDENCE HALLS</paper-button>
-
-    <paper-button index="6" on-tap="{{clickHandler}}" raised>DINING</paper-button>
-
-    <paper-button index="7" on-tap="{{clickHandler}}" raised>BLUE LIGHTS</paper-button>
-
-    <paper-button index="8" on-tap="{{clickHandler}}" raised>BISON ONE CARD</paper-button>
     <!--
     CONTAINAER FOR THE LIST COMPONENTS-->
     <hu-list id="hu_list"
       bldgs="{{bldgs}}"
-      show="{{filters}}">
+      categoryselected="{{categorySelected}}">
+
       <hu-card>
-        {{model.building_id}}
+
       </hu-card>
 
     </hu-list>
@@ -153,30 +193,7 @@
 
 
     <api-ajax bldgs = "{{bldgs}}"></api-ajax>
-    <!-- <google-map
-      id="humap"
-      apiKey="{{apiKey}}"
-      map="{{map}}"
-      latitude="38.922684" longitude="-77.019438"
-      zoom="16"
-      maxzoom="16"
-      minZoom="16"
-      disableDefaultUI>
 
-
-         <template repeat = "{{bldg in bldgs}}">
-          <google-map-marker
-            latitude="{{bldg.lat}}"
-            longitude="{{bldg.lon}}">
-
-            <h3>{{bldg.campus_name}}({{bldg.campus_id}})</h3>
-            <h3>{{bldg.building_name}}({{bldg.building_id}})</h3>
-            <p>
-              {{bldg.building_address}}
-            </p>
-          </google-map-marker>
-        </template>
-      </google-map> -->
 
 
 
@@ -192,9 +209,16 @@
         toggleButton:function(){
 
         },
+        isParking:function(idname){
+          if(parseInt(idname)){
+            return true;
+          }else{
+            return false;
+          }
+        },
         ready:function(){
 
-          this.categorySelected=true;
+          this.categorySelected='all';
           this.apiKey = "AIzaSyAQ8fwfkyjhln59a2ODNDNF2f6lXZhA_aU";
           this.mapStyle = [
             {"elementType":"labels.icon","stylers":[{"color":"#365779"},{"visibility":"off"}]}
@@ -216,10 +240,8 @@
           // console.log(this.$.humap.map);
 
         },
-        filterList:function(id){
-          this.$.hu_list.show = !this.$.hu_list.show;
-          this.$.hu_list.showid = id;
-          // this.$.hu_list.show = id;
+        toggleDrawer:function(){
+          this.$.drawerpanel.togglePanel();
         },
         /**
          * THIS FUNCTION IS THE SOLE HANDLER FOR ALL 8 PAPER-BUTTONS
@@ -229,8 +251,12 @@
         clickHandler:function(e,detail,sender){
           var filter = e.target.innerText
           console.log("click");
-
+          var markers = this.$.humap.querySelectorAll('google-map-marker');
           switch (filter) {
+            case "ALL":
+              console.log("ALL button clicked");
+              this.categorySelected='all'
+              break;
             case "MAIN CAMPUS":
               console.log("MAIN CAMPUS button clicked");
               break;
@@ -241,9 +267,11 @@
                   console.log("WEST CAMPUS button clicked");
                   break;
                   case "PARKING":
+                    this.categorySelected='parking';
                     console.log("PARKING button clicked");
                     break;
                     case "RESIDENCE HALLS":
+                      this.categorySelected='residence';
                       console.log("RESIDENCE HALLS button clicked");
                       break;
                       case "DINING":
